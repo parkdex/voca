@@ -1,21 +1,36 @@
-import dummy from './db/data.json'
+import { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
+import Word from './Word';
 
 const Day = function() {
-  return (
-    <table>
-      <tbody>
-        {
-          dummy.words.map(item => (
-            //console.log('ddd', item)
 
-            <tr key={item.id}>
-              <td>{item.eng}</td>
-              <td>{item.kor}</td>
-            </tr>
-          ))
-        }
-      </tbody>
-    </table>
+  const day = useParams().day;
+  const [words, setWords] = useState(() => []);
+
+  useEffect(() => {
+    // need fetch error handle
+    fetch(`http://localhost:3001/words?day=${day}`)
+      .then((res) => {
+        return res.json();
+      })
+      .then((data) => {
+        setWords(data);
+      });
+  }, [day]);
+
+  return (
+    <div>
+      <h2>day : {day}</h2>
+      <table>
+        <tbody>
+          {
+            words.map(item => (
+              <Word item={item} key={item.id}/>
+            ))
+          }
+        </tbody>
+      </table>
+    </div>
   )  
 };
 
