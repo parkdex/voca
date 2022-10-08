@@ -1,22 +1,19 @@
-import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
+import useFetch from './hooks/useFetch';
 import Word from './Word';
 
 const Day = function() {
-
   const day = useParams().day;
-  const [words, setWords] = useState(() => []);
+  const words = useFetch(`http://localhost:3001/words?day=${day}`);
 
-  useEffect(() => {
-    // need fetch error handle
-    fetch(`http://localhost:3001/words?day=${day}`)
-      .then((res) => {
-        return res.json();
-      })
-      .then((data) => {
-        setWords(data);
-      });
-  }, [day]);
+  if(words.length <= 0) {
+    return (
+      <span>
+        <h3>loading...</h3>
+      </span>
+    )
+  }
+  // 로딩화면
 
   return (
     <div>
